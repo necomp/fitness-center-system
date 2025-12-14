@@ -7,12 +7,12 @@ namespace fitcensys.Models
         [Key]
         public int GymID { get; set; }
         public string Name { get; set; }
-        public string Adress { get; set; }
+        public string Address { get; set; }
         
-        //public ICollection<GymWorkingHour> WorkingHours { get; set; }
+        public ICollection<GymWorkingHour> WorkingHours { get; set; }
 
-        //public ICollection<GymService> Services { get; set; }
+        public ICollection<GymService> GymServices { get; set; }
 
-        //public ICollection<Trainer> Trainers { get; set; }
+        public ICollection<Trainer> Trainers { get; set; }
     }
 }
