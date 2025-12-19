@@ -41,18 +41,19 @@ namespace fitcensys.Models
         public string Phone { get; set; }
 
         //Bir antrenör bir salona ait (Salona özgü bir uygulama sonuçta antrenörler için değil))
-        public int GymID { get; set; }       
-        public Gym Gym { get; set; }
+        [Display(Name = "Çalıştığı Salon")]
+        public int GymID { get; set; }    // gym.Trainers dediğimizde EF arka planda trainer tablosunda GymID sine bakarak listeler
+        public Gym? Gym { get; set; }
 
         
         // eğitmenin verdiği eğitim,hizmet
-        public ICollection<TrainerService> TrainerServices { get; set; }
+        public ICollection<TrainerService> TrainerServices { get; set; } = new List<TrainerService>();
         
         // Eğitmenin müsait zamanları 
-        public ICollection<TrainerAvailability> Availabilities { get; set; }
+        public ICollection<TrainerAvailability> Availabilities { get; set; } = new List<TrainerAvailability>();
         
         // Randevular
-        public ICollection<Appointment> Appointments { get; set; }
+        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 
     }
 }

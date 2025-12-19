@@ -11,15 +11,15 @@
             public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
             {
             }
-
-            public DbSet<Gym> Gyms { get; set; }
+                                                                                    
+            public DbSet<Gym> Gyms { get; set; }                                    // Master entity table
             public DbSet<GymWorkingHour> GymWorkingHours { get; set; }
-            public DbSet<ServiceDefinition> ServiceDefinitions { get; set; }
-            public DbSet<GymService> GymServices { get; set; }
-            public DbSet<Trainer> Trainers { get; set; }
-            public DbSet<TrainerAvailability> TrainerAvailabilities { get; set; }
-            public DbSet<TrainerService> TrainerServices { get; set; }
-            public DbSet<Appointment> Appointments { get; set; }
+            public DbSet<ServiceDefinition> ServiceDefinitions { get; set; }        // Master entity table
+            public DbSet<GymService> GymServices { get; set; }                      // Join entity (ara tablo) Gym+ServiceDef
+            public DbSet<Trainer> Trainers { get; set; }                            // Master entity table
+            public DbSet<TrainerAvailability> TrainerAvailabilities { get; set; }   // One to many
+            public DbSet<TrainerService> TrainerServices { get; set; }              // Join entity (ara tablo) Trainer+ServiceDef
+            public DbSet<Appointment> Appointments { get; set; }                    // One to many
 
             protected override void OnModelCreating(ModelBuilder builder)
             {

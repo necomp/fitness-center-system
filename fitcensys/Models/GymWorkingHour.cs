@@ -7,8 +7,9 @@ namespace fitcensys.Models
         [Key]
         public int GymWorkingHourID { get; set; }
 
+        [Display(Name = "Salon")]
         public int GymID { get; set; }
-        public Gym Gym { get; set; }
+        public Gym? Gym { get; set; }
 
         [Required]
         public DayOfWeek Day { get; set; } // Enum: Sunday=0, Monday=1...

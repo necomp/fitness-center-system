@@ -18,17 +18,20 @@ namespace fitcensys.Models
         public int AppointmentID { get; set; }
 
         // Alan kişi
+        [Display(Name = "Üye")]
         public string MemberID { get; set; } // IdentityUser ID'si string'dir (Guid)
         [ForeignKey("MemberID")]
         public ApplicationUser Member { get; set; }
 
         // Alınan eğitmen
+        [Display(Name = "Eğitmen")]
         public int TrainerID { get; set; }
-        public Trainer Trainer { get; set; }
+        public Trainer? Trainer { get; set; }
 
         // Alınan hizmet (GymService'e bağlıyoruz, ServiceDefinition'a değil.)
+        [Display(Name = "Alınacak Hizmet")]
         public int GymServiceID { get; set; }
-        public GymService GymService { get; set; }
+        public GymService? GymService { get; set; }
 
         [Required]
         public DateTime AppointmentDate { get; set; } // Tarih

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace fitcensys.Models
 {
@@ -6,11 +7,13 @@ namespace fitcensys.Models
     {
         // bu tablonun primary key i yok 
         // TrainerID ve ServiceID Composite key oluşturur
+        [Display(Name="Eğitmen")]
         public int TrainerID { get; set; }
-        public Trainer Trainer { get; set; }
+        public Trainer? Trainer { get; set; }
 
+        [Display(Name ="Hizmet Adı")]
         public int ServiceDefinitionID { get; set; }
-        public ServiceDefinition ServiceDefinition { get; set; }
+        public ServiceDefinition? ServiceDefinition { get; set; }
     }
 
 }

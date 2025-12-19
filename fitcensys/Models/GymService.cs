@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace fitcensys.Models
@@ -9,11 +10,13 @@ namespace fitcensys.Models
         public int GymServiceID { get; set; }
 
         // ait olduğu salon
+        [Display(Name="Spor Salonu")]
         public int GymID { get; set; }
-        public Gym Gym { get; set; }
+        public Gym? Gym { get; set; }
 
+        [Display(Name ="Hizmet Adı")]
         public int ServiceDefinitionID { get; set; }
-        public ServiceDefinition ServiceDefinition { get; set; }
+        public ServiceDefinition? ServiceDefinition { get; set; }
 
         [Required]
         [DataType(DataType.Currency)]
@@ -27,6 +30,6 @@ namespace fitcensys.Models
         public int Capacity { get; set; } = 1;
 
         // Bu spesifik salon hizmeti için alınmış randevular
-        public ICollection<Appointment> Appointments { get; set; }
+        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }
 }
