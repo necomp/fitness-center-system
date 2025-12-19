@@ -1,4 +1,23 @@
+using fitcensys.Models;
+using fitcensys.Models.fitcensys.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// DB Baðlantýsý
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// IDENTITY SERVÝSÝ (Login iþlemleri için þart)
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 3;
+    options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -18,6 +37,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

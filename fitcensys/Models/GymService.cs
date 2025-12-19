@@ -27,6 +27,6 @@ namespace fitcensys.Models
         public int Capacity { get; set; } = 1;
 
         // Bu spesifik salon hizmeti için alınmış randevular
-        //public ICollection<Appointment> Appointments { get; set; }
+        public ICollection<Appointment> Appointments { get; set; }
     }
 }
