@@ -21,7 +21,7 @@ namespace fitcensys.Models
         [Display(Name = "Üye")]
         public string MemberID { get; set; } // IdentityUser ID'si string'dir (Guid)
         [ForeignKey("MemberID")]
-        public ApplicationUser Member { get; set; }
+        public ApplicationUser? Member { get; set; }
 
         // Alınan eğitmen
         [Display(Name = "Eğitmen")]

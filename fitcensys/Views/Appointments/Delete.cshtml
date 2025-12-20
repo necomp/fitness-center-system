@@ -1,0 +1,59 @@
+﻿@model fitcensys.Models.Appointment
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Randevuyu Sil</h1>
+
+<div class="alert alert-danger">
+    <h3>Bu randevuyu silmek istediğine emin misin?</h3>
+    <p>Bu işlem geri alınamaz.</p>
+</div>
+
+<div>
+    <h4>Randevu Detayları</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Üye Adı</dt>
+        <dd class="col-sm-9">
+            @(Model.Member != null ? Model.Member.FirstName + " " + Model.Member.LastName : "Bulunamadı")
+        </dd>
+
+        <dt class="col-sm-3">Eğitmen</dt>
+        <dd class="col-sm-9">
+            @(Model.Trainer != null ? Model.Trainer.FirstName + " " + Model.Trainer.LastName : "-")
+        </dd>
+
+        <dt class="col-sm-3">Hizmet</dt>
+        <dd class="col-sm-9">
+            @(Model.GymService != null && Model.GymService.ServiceDefinition != null ? Model.GymService.ServiceDefinition.Name : "-")
+        </dd>
+
+        <dt class="col-sm-3">Tarih</dt>
+        <dd class="col-sm-9">
+            @Model.AppointmentDate.ToString("dd.MM.yyyy")
+        </dd>
+
+        <dt class="col-sm-3">Saat Aralığı</dt>
+        <dd class="col-sm-9">
+            @Model.StartTime.ToString(@"hh\:mm") - @Model.EndTime.ToString(@"hh\:mm")
+        </dd>
+
+        <dt class="col-sm-3">Durum</dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+
+        <dt class="col-sm-3">Fiyat</dt>
+        <dd class="col-sm-9">
+            @Model.PriceSnapshot ₺
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="AppointmentID" />
+        <input type="submit" value="Evet, Sil" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+    </form>
+</div>

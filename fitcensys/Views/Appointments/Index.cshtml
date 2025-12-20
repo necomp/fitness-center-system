@@ -1,0 +1,110 @@
+﻿@model IEnumerable<fitcensys.Models.Appointment>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Member)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trainer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GymService)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppointmentDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PriceSnapshot)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (item.Member != null)
+                    {
+                        @item.Member.FirstName @item.Member.LastName
+                    }
+                    else
+                    {
+                        <span class="text-muted">Misafir/Silinmiş</span>
+                    }
+                </td>
+
+                <td>
+                    @if (item.Trainer != null)
+                    {
+                        @item.Trainer.FirstName @item.Trainer.LastName
+                    }
+                    else
+                    {
+                        <span>-</span>
+                    }
+                </td>
+
+                <td>
+                    @if (item.GymService != null && item.GymService.ServiceDefinition != null)
+                    {
+                        @item.GymService.ServiceDefinition.Name
+                    }
+                    else
+                    {
+                        <span>-</span>
+                    }
+                </td>
+
+                <td>
+                    @item.AppointmentDate.ToString("dd.MM.yyyy")
+                </td>
+
+                <td>
+                    @item.StartTime.ToString(@"hh\:mm")
+                </td>
+                <td>
+                    @item.EndTime.ToString(@"hh\:mm")
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+
+                <td>
+                    @item.PriceSnapshot ₺
+                </td>
+                <td>
+                    @item.CreatedDate.ToString("dd.MM.yyyy HH:mm")
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.AppointmentID" class="btn btn-sm btn-info">Detay</a> |
+                    <a asp-action="Delete" asp-route-id="@item.AppointmentID" class="btn btn-sm btn-danger">İptal/Sil</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
