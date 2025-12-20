@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using fitcensys.Models;
 using fitcensys.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace fitcensys.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ServiceDefinitionsController : Controller
     {
         private readonly AppDbContext _context;

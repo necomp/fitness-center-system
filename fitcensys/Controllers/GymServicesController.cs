@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using fitcensys.Models;
 using fitcensys.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace fitcensys.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class GymServicesController : Controller
     {
         private readonly AppDbContext _context;
@@ -47,9 +49,10 @@ namespace fitcensys.Controllers
         }
 
         // GET: GymServices/Create
-        public IActionResult Create()
+        public IActionResult Create(int? gymId)
         {
-            ViewData["GymID"] = new SelectList(_context.Gyms, "GymID", "Name"); // drop down menüde ID yerine isim gözükmesi için 3.parametreyi name yaptık
+            ViewData["GymID"] = new SelectList(_context.Gyms, "GymID", "Name", gymId);
+            // Hizmet tanımlarını da çekelim (Pilates, Boks vb.)
             ViewData["ServiceDefinitionID"] = new SelectList(_context.ServiceDefinitions, "ServiceDefinitionID", "Name");
             return View();
         }

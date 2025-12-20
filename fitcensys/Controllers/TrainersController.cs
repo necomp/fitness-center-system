@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using fitcensys.Models;
 using fitcensys.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace fitcensys.Controllers
 {
+    
     public class TrainersController : Controller
     {
         private readonly AppDbContext _context;
@@ -27,26 +29,25 @@ namespace fitcensys.Controllers
             return View(await appDbContext.ToListAsync());
         }
 
+        
         // GET: Trainers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var trainer = await _context.Trainers
-                .Include(t => t.Gym)
+                .Include(t => t.Gym) // Çalıştığı salon
+                .Include(t => t.TrainerServices).ThenInclude(ts => ts.ServiceDefinition) // Verdiği dersler
+                .Include(t => t.Availabilities)
                 .FirstOrDefaultAsync(m => m.TrainerID == id);
-            if (trainer == null)
-            {
-                return NotFound();
-            }
+
+            if (trainer == null) return NotFound();
 
             return View(trainer);
         }
 
         // GET: Trainers/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["GymID"] = new SelectList(_context.Gyms, "GymID", "Name");
@@ -58,6 +59,7 @@ namespace fitcensys.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("TrainerID,FirstName,LastName,Gender,Biography,EmailAddress,Phone,GymID")] Trainer trainer)
         {
             if (ModelState.IsValid)
@@ -71,6 +73,7 @@ namespace fitcensys.Controllers
         }
 
         // GET: Trainers/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -92,6 +95,7 @@ namespace fitcensys.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("TrainerID,FirstName,LastName,Gender,Biography,EmailAddress,Phone,GymID")] Trainer trainer)
         {
             if (id != trainer.TrainerID)
@@ -124,6 +128,7 @@ namespace fitcensys.Controllers
         }
 
         // GET: Trainers/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -145,6 +150,7 @@ namespace fitcensys.Controllers
         // POST: Trainers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var trainer = await _context.Trainers.FindAsync(id);

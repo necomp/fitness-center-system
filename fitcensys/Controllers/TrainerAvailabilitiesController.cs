@@ -7,9 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace fitcensys.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class TrainerAvailabilitiesController : Controller
     {
         private readonly AppDbContext _context;
@@ -46,9 +49,9 @@ namespace fitcensys.Controllers
         }
 
         // GET: TrainerAvailabilities/Create
-        public IActionResult Create()
+        public IActionResult Create(int? trainerId)
         {
-            ViewData["TrainerID"] = new SelectList(_context.Trainers, "TrainerID", "FullName");
+            ViewData["TrainerID"] = new SelectList(_context.Trainers, "TrainerID", "FullName", trainerId);
             return View();
         }
 

@@ -1,8 +1,147 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    /* Kartların üzerine gelince hafif yukarı kalkması ve gölgelenmesi için efekt */
+    .dashboard-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        text-decoration: none !important; /* Link alt çizgisini kaldır */
+        color: inherit; /* Yazı rengini koru */
+        height: 100%;
+        display: block;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
+    }
+    .card-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="container mt-4">
+
+    @if (!SignInManager.IsSignedIn(User))
+    {
+        <div class="p-5 mb-4 bg-light rounded-3 text-center shadow-sm">
+            <div class="container-fluid py-5">
+                <h1 class="display-4 fw-bold text-primary">FitCensys'e Hoşgeldiniz</h1>
+                <p class="col-md-8 fs-4 mx-auto">Sağlıklı bir yaşam için en iyi spor salonlarını keşfedin, eğitmenlerden randevu alın ve gelişiminizi takip edin.</p>
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
+                    <a class="btn btn-primary btn-lg px-4 gap-3" asp-area="Identity" asp-page="/Account/Register">Hemen Kayıt Ol</a>
+                    <a class="btn btn-outline-secondary btn-lg px-4" asp-area="Identity" asp-page="/Account/Login">Giriş Yap</a>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        var user = await UserManager.GetUserAsync(User);
+
+        <div class="text-center mb-5">
+            <h2 class="display-6">Hoşgeldin, <span class="text-primary fw-bold">@user.FirstName!</span></h2>
+            <p class="text-muted">
+                @(User.IsInRole("Admin") ? "Yönetim paneline hoşgeldiniz." : "Bugün ne yapmak istersin?")
+            </p>
+        </div>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="row g-4 mb-5">
+                <div class="col-md-3">
+                    <a asp-controller="Gyms" asp-action="Index" class="card h-100 shadow-sm border-0 bg-primary text-white dashboard-card">
+                        <div class="card-body text-center p-4">
+                            <div class="fs-1 mb-3">🏢</div>
+                            <h4>Salon Yönetimi</h4>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-3">
+                    <a asp-controller="Trainers" asp-action="Index" class="card h-100 shadow-sm border-0 bg-success text-white dashboard-card">
+                        <div class="card-body text-center p-4">
+                            <div class="fs-1 mb-3">💪</div>
+                            <h4>Eğitmenler</h4>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-3">
+                    <a asp-controller="Users" asp-action="Index" class="card h-100 shadow-sm border-0 bg-dark text-white dashboard-card">
+                        <div class="card-body text-center p-4">
+                            <div class="fs-1 mb-3">👥</div>
+                            <h4>Üye Listesi</h4>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-3">
+                    <a asp-controller="Appointments" asp-action="Index" class="card h-100 shadow-sm border-0 bg-warning text-dark dashboard-card">
+                        <div class="card-body text-center p-4">
+                            <div class="fs-1 mb-3">⏳</div>
+                            <h4>Randevu Talepleri</h4>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        }
+
+        else
+        {
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <a asp-controller="Gyms" asp-action="Index" class="card h-100 shadow border-0 dashboard-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                        <div class="card-body text-center p-5">
+                            <div class="card-icon">🏢</div>
+                            <h2 class="card-title">Spor Salonları</h2>
+                            <p class="card-text fs-5 opacity-75">Sana en yakın salonları ve hizmetleri keşfet.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a asp-controller="Appointments" asp-action="Create" class="card h-100 shadow border-0 dashboard-card" style="background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%); color: white;">
+                        <div class="card-body text-center p-5">
+                            <div class="card-icon">📅</div>
+                            <h2 class="card-title">Randevu Al</h2>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a asp-controller="Appointments" asp-action="Index" class="card h-100 shadow border-0 dashboard-card bg-white text-dark">
+                        <div class="card-body text-center p-5">
+                            <div class="card-icon text-primary">📋</div>
+                            <h2 class="card-title">Randevularım</h2>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a asp-controller="Profile" asp-action="Index" class="card h-100 shadow border-0 dashboard-card bg-white text-dark">
+                        <div class="card-body text-center p-5">
+                            <div class="card-icon text-success">👤</div>
+                            <h2 class="card-title">Profilim</h2>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-12">
+                    <a asp-controller="AI" asp-action="Index" class="card h-100 shadow border-0 dashboard-card" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: white;">
+                        <div class="card-body text-center p-5 d-flex align-items-center justify-content-between">
+                            <div class="text-start">
+                                <h2 class="card-title fw-bold">🤖 AI Akıllı Koç</h2>
+                                <p class="card-text fs-5 opacity-75 mb-0">Yapay zeka ile vücut analizi yap ve sana özel karakterini öğren.</p>
+                            </div>
+                            <div class="display-1">🔮</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+    }
 </div>

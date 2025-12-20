@@ -7,9 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace fitcensys.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class GymWorkingHoursController : Controller
     {
         private readonly AppDbContext _context;
@@ -46,9 +48,10 @@ namespace fitcensys.Controllers
         }
 
         // GET: GymWorkingHours/Create
-        public IActionResult Create()
+        public IActionResult Create(int? gymId)
         {
-            ViewData["GymID"] = new SelectList(_context.Gyms, "GymID", "Name");
+            // Eğer linkten gymId geldiyse onu seçili getir
+            ViewData["GymID"] = new SelectList(_context.Gyms, "GymID", "Name", gymId);
             return View();
         }
 

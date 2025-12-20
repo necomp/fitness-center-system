@@ -4,46 +4,52 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>GymWorkingHour</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="GymID" class="control-label"></label>
-                <select asp-for="GymID" class ="form-control" asp-items="ViewBag.GymID"></select>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">
+                    <h5> Gym Çalışma Saati </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="GymID" class="control-label"></label>
+                            <select asp-for="GymID" class="form-control" asp-items="ViewBag.GymID"></select>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Day" class="control-label"></label>
+                            <select asp-for="Day" class="form-control">
+                                <option value="">-- Gün Seçiniz --</option>
+                                <option value="1">Pazartesi</option>
+                                <option value="2">Salı</option>
+                                <option value="3">Çarşamba</option>
+                                <option value="4">Perşembe</option>
+                                <option value="5">Cuma</option>
+                                <option value="6">Cumartesi</option>
+                                <option value="0">Pazar</option>
+                            </select>
+                            <span asp-validation-for="Day" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="OpeningTime" class="control-label"></label>
+                            <input asp-for="OpeningTime" class="form-control" />
+                            <span asp-validation-for="OpeningTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ClosingTime" class="control-label"></label>
+                            <input asp-for="ClosingTime" class="form-control" />
+                            <span asp-validation-for="ClosingTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Day" class="control-label"></label>
-                <select asp-for="Day" class="form-control">
-                    <option value="">-- Gün Seçiniz --</option>
-                    <option value="1">Pazartesi</option>
-                    <option value="2">Salı</option>
-                    <option value="3">Çarşamba</option>
-                    <option value="4">Perşembe</option>
-                    <option value="5">Cuma</option>
-                    <option value="6">Cumartesi</option>
-                    <option value="0">Pazar</option>
-                </select>
-                <span asp-validation-for="Day" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OpeningTime" class="control-label"></label>
-                <input asp-for="OpeningTime" class="form-control" />
-                <span asp-validation-for="OpeningTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ClosingTime" class="control-label"></label>
-                <input asp-for="ClosingTime" class="form-control" />
-                <span asp-validation-for="ClosingTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -54,3 +60,4 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+

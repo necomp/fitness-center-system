@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using fitcensys.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using fitcensys.Models;
-using fitcensys.Models;
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 namespace fitcensys.Controllers
 {
+    [Authorize]
     public class GymsController : Controller
     {
         private readonly AppDbContext _context;
@@ -34,6 +34,9 @@ namespace fitcensys.Controllers
             }
 
             var gym = await _context.Gyms
+                .Include(g => g.WorkingHours) // Çalışma saatlerini getir
+                .Include(g => g.Trainers)     // Hocaları getir
+                .Include(g => g.GymServices).ThenInclude(gs => gs.ServiceDefinition) // Hizmetleri getir
                 .FirstOrDefaultAsync(m => m.GymID == id);
             if (gym == null)
             {
@@ -44,6 +47,7 @@ namespace fitcensys.Controllers
         }
 
         // GET: Gyms/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -54,6 +58,7 @@ namespace fitcensys.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("GymID,Name,Address")] Gym gym)
         {
             if (ModelState.IsValid)
@@ -66,6 +71,7 @@ namespace fitcensys.Controllers
         }
 
         // GET: Gyms/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +92,7 @@ namespace fitcensys.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("GymID,Name,Address")] Gym gym)
         {
             if (id != gym.GymID)
@@ -117,6 +124,7 @@ namespace fitcensys.Controllers
         }
 
         // GET: Gyms/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +145,7 @@ namespace fitcensys.Controllers
         // POST: Gyms/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var gym = await _context.Gyms.FindAsync(id);

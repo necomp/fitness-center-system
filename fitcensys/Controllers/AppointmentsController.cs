@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Security.Claims;
+﻿using fitcensys.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using fitcensys.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace fitcensys.Controllers
 {
+    [Authorize]
     public class AppointmentsController : Controller
     {
         private readonly AppDbContext _context;
@@ -25,13 +27,20 @@ namespace fitcensys.Controllers
             // Giriş yapan kullanıcıyı alalım (Opsiyonel: Sadece kendi randevularını görsün istersek burayı filtreleriz)
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Eğer admin ise hepsini görsün, değilse sadece kendininkini (Bu filtreyi şimdilik kapalı tutuyorum, test için hepsini gör)
-            var appDbContext = _context.Appointments
-                .Include(a => a.GymService).ThenInclude(gs => gs.ServiceDefinition) // Hizmet adını görmek için zincirleme include
+            var appointmentsQuery = _context.Appointments
+                .Include(a => a.GymService).ThenInclude(gs => gs.ServiceDefinition)
                 .Include(a => a.Member)
-                .Include(a => a.Trainer);
+                .Include(a => a.Trainer)
+                .AsQueryable(); // Sorguyu eklemeler yapabilir hale getiriyoruz
 
-            return View(await appDbContext.ToListAsync());
+            // GÜVENLİK FİLTRESİ: Admin değilse sadece kendi randevularını görsün
+            if (!User.IsInRole("Admin"))
+            {
+                appointmentsQuery = appointmentsQuery.Where(a => a.MemberID == userId);
+            }
+
+            // Veriyi çek ve View'a gönder
+            return View(await appointmentsQuery.ToListAsync());
         }
 
         // GET: Appointments/Details/5
@@ -221,9 +230,62 @@ namespace fitcensys.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+        // --- ADMIN İŞLEMLERİ (ONAYLA / REDDET) ---
 
-       
-        
+        // GET: Appointments/Approve/5
+        [Authorize(Roles = "Admin")] // Sadece Admin
+        public async Task<IActionResult> Approve(int id)
+        {
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null) return NotFound();
+
+            // Durumu 'Confirmed' (Onaylandı) yap
+            appointment.Status = AppointmentStatus.Confirmed;
+            _context.Update(appointment);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Appointments/Reject/5
+        [Authorize(Roles = "Admin")] // Sadece Admin
+        public async Task<IActionResult> Reject(int id)
+        {
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null) return NotFound();
+
+            // Durumu 'Cancelled' (İptal/Red) yap
+            appointment.Status = AppointmentStatus.Cancelled;
+            _context.Update(appointment);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var appointment = await _context.Appointments
+                .Include(a => a.Member)
+                .FirstOrDefaultAsync(m => m.AppointmentID == id);
+
+            if (appointment == null) return NotFound();
+
+            // GÜVENLİK KONTROLÜ: 
+            // Admin değilse ve randevu başkasınınsa iptal edemesin!
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!User.IsInRole("Admin") && appointment.MemberID != userId)
+            {
+                return Unauthorized(); // "Senin değil bu randevu!" hatası
+            }
+
+            // Durumu İptal Edildi yap
+            appointment.Status = AppointmentStatus.Cancelled;
+            _context.Update(appointment);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
 
     }
 }

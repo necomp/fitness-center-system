@@ -1,30 +1,126 @@
 ﻿@model fitcensys.Models.Gym
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Salon Detayları";
 }
 
-<h1>Details</h1>
+<div class="container mt-4">
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h1 class="card-title text-primary">@Model.Name</h1>
+            <p class="card-text text-muted">
+                <strong>📍 Adres:</strong> @Model.Address
+            </p>
+        </div>
+    </div>
 
-<div>
-    <h4>Gym</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.GymID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">🕒 Çalışma Saatleri</h5>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="GymWorkingHours" asp-action="Create" asp-route-gymId="@Model.GymID" class="btn btn-sm btn-light text-primary fw-bold">
+                            + Saat Ekle
+                        </a>
+                    }
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>Gün</th>
+                                <th>Açılış</th>
+                                <th>Kapanış</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.WorkingHours.Any())
+                            {
+                                @foreach (var hour in Model.WorkingHours.OrderBy(h => h.Day))
+                                {
+                                    <tr>
+                                        <td>@hour.Day</td>
+                                        <td>@hour.OpeningTime.ToString(@"hh\:mm")</td>
+                                        <td>@hour.ClosingTime.ToString(@"hh\:mm")</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">Saat bilgisi girilmemiş.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">💪 Eğitmen Kadrosu</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @if (Model.Trainers.Any())
+                    {
+                        @foreach (var trainer in Model.Trainers)
+                        {
+                            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <a asp-controller="Trainers" asp-action="Details" asp-route-id="@trainer.TrainerID" class="text-decoration-none text-dark fw-bold stretched-link">
+                                    @trainer.FirstName @trainer.LastName
+                                </a>
+                                <span class="badge bg-secondary">@trainer.Gender</span>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="list-group-item text-muted">Henüz eğitmen atanmamış.</li>
+                    }
+                </ul>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">🏷️ Hizmetler ve Fiyatlar</h5>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="GymServices" asp-action="Create" asp-route-gymId="@Model.GymID" class="btn btn-sm btn-dark">
+                            + Hizmet Ekle
+                        </a>
+                    }
+                </div>
+                <ul class="list-group list-group-flush">
+                    @if (Model.GymServices.Any())
+                    {
+                        @foreach (var service in Model.GymServices)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                @service.ServiceDefinition.Name
+                                <span class="badge bg-primary rounded-pill">@service.Price ₺</span>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="list-group-item text-muted">Hizmet bilgisi girilmemiş.</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.GymID" class="btn btn-warning">Düzenle</a>
+            <span>|</span>
+        }
+        <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+        <a asp-controller="Appointments" asp-action="Create" class="btn btn-primary float-end">📅 Hemen Randevu Al</a>
+    </div>
 </div>

@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using fitcensys.Models;
 using fitcensys.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace fitcensys.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class TrainerServicesController : Controller
     {
         private readonly AppDbContext _context;
@@ -47,10 +49,13 @@ namespace fitcensys.Controllers
         }
 
         // GET: TrainerServices/Create
-        public IActionResult Create()
+        public IActionResult Create(int? trainerId)
         {
+            // Eğer trainerId geldiyse dropdown'da onu seçili getir, gelmediyse boş getir.
+            ViewData["TrainerID"] = new SelectList(_context.Trainers, "TrainerID", "FullName", trainerId);
+
+            // Hizmet listesini yükle
             ViewData["ServiceDefinitionID"] = new SelectList(_context.ServiceDefinitions, "ServiceDefinitionID", "Name");
-            ViewData["TrainerID"] = new SelectList(_context.Trainers, "TrainerID", "FullName");
             return View();
         }
 

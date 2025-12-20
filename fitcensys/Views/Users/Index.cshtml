@@ -1,0 +1,37 @@
+﻿@model IEnumerable<fitcensys.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Üye Listesi";
+}
+
+<div class="container mt-4">
+    <h2>👥 Kayıtlı Üyeler</h2>
+    <hr />
+
+    <div class="card shadow-sm">
+        <table class="table table-striped table-hover mb-0">
+            <thead class="bg-light">
+                <tr>
+                    <th>Ad Soyad</th>
+                    <th>E-Posta</th>
+                    <th>Telefon</th>
+                    <th>Boy / Kilo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.FirstName @user.LastName</td>
+                        <td>@user.Email</td>
+                        <td>@(user.PhoneNumber ?? "-")</td>
+                        <td>
+                            @(user.Height != null ? user.Height + " cm" : "-") /
+                            @(user.Weight != null ? user.Weight + " kg" : "-")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
