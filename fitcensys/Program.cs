@@ -70,4 +70,56 @@ app.MapControllerRoute(
 
 app.MapRazorPages(); // <--- BUNU EKLEMEK ŞART! (Login/Register linklerinin çalışması için)
 
+
+// Program.cs içinde app.Run()'dan hemen önce şu bloğu ekle:
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+        // 1. Rolleri oluştur (Yoksa)
+        string[] roleNames = { "Admin", "Member" };
+        foreach (var roleName in roleNames)
+        {
+            if (!await roleManager.RoleExistsAsync(roleName))
+            {
+                await roleManager.CreateAsync(new IdentityRole(roleName));
+            }
+        }
+
+        // 2. Sabit Admin Kullanıcısını Oluştur
+        var adminEmail = "admin@fitcensys.com"; // Hocaya bu maili ver
+        var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+        if (adminUser == null)
+        {
+            var newAdmin = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                FirstName = "Sistem",
+                LastName = "Admin",
+                EmailConfirmed = true,
+                Height = 180, // Default değerler
+                Weight = 80,
+                BirthDate = new DateTime(1990, 1, 1)
+            };
+
+            var createAdmin = await userManager.CreateAsync(newAdmin, "Admin123!"); // Sabit Şifre
+            if (createAdmin.Succeeded)
+            {
+                await userManager.AddToRoleAsync(newAdmin, "Admin");
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        // Hata loglanabilir
+    }
+}
+
+app.Run();
 app.Run();
