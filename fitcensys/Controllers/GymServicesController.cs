@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using fitcensys.Models;
-using fitcensys.Models.fitcensys.Models;
+using fitcensys.Models;
 
 namespace fitcensys.Controllers
 {
@@ -85,7 +85,7 @@ namespace fitcensys.Controllers
             {
                 return NotFound();
             }
-            ViewData["GymID"] = new SelectList(_context.Gyms, "GymID", "GymID", gymService.GymID);
+            ViewData["GymID"] = new SelectList(_context.Gyms, "GymID", "Name", gymService.GymID);
             ViewData["ServiceDefinitionID"] = new SelectList(_context.ServiceDefinitions, "ServiceDefinitionID", "Name", gymService.ServiceDefinitionID);
             return View(gymService);
         }
@@ -122,7 +122,7 @@ namespace fitcensys.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GymID"] = new SelectList(_context.Gyms, "GymID", "GymID", gymService.GymID);
+            ViewData["GymID"] = new SelectList(_context.Gyms, "GymID", "Name", gymService.GymID);
             ViewData["ServiceDefinitionID"] = new SelectList(_context.ServiceDefinitions, "ServiceDefinitionID", "Name", gymService.ServiceDefinitionID);
             return View(gymService);
         }

@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using fitcensys.Models.fitcensys.Models;
+using fitcensys.Models;
 
 #nullable disable
 
 namespace fitcensys.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251219195730_duzenleme")]
-    partial class duzenleme
+    [Migration("20251220055852_trainerAvailability")]
+    partial class trainerAvailability
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -463,15 +463,23 @@ namespace fitcensys.Migrations
 
             modelBuilder.Entity("fitcensys.Models.TrainerService", b =>
                 {
-                    b.Property<int>("TrainerID")
+                    b.Property<int>("TrainerServiceID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrainerServiceID"));
 
                     b.Property<int>("ServiceDefinitionID")
                         .HasColumnType("int");
 
-                    b.HasKey("TrainerID", "ServiceDefinitionID");
+                    b.Property<int>("TrainerID")
+                        .HasColumnType("int");
+
+                    b.HasKey("TrainerServiceID");
 
                     b.HasIndex("ServiceDefinitionID");
+
+                    b.HasIndex("TrainerID");
 
                     b.ToTable("TrainerServices");
                 });

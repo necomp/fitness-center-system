@@ -1,12 +1,15 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace fitcensys.Models
 {
     public class TrainerService
     {
-        // bu tablonun primary key i yok 
-        // TrainerID ve ServiceID Composite key oluşturur
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int TrainerServiceID { get; set; }
+       
         [Display(Name="Eğitmen")]
         public int TrainerID { get; set; }
         public Trainer? Trainer { get; set; }

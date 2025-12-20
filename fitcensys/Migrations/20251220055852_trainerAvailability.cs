@@ -5,7 +5,7 @@
 namespace fitcensys.Migrations
 {
     /// <inheritdoc />
-    public partial class edit_data_annot : Migration
+    public partial class trainerAvailability : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

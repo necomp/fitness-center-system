@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using fitcensys.Models;
-using fitcensys.Models.fitcensys.Models;
+using fitcensys.Models;
 
 namespace fitcensys.Controllers
 {

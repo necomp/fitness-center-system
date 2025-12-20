@@ -7,7 +7,7 @@ namespace fitcensys.Models
     public class GymService
     {
         [Key]
-        public int GymServiceID { get; set; }
+        public int GymServiceID { get; set; } // köprü ama kendi özellikleride bulunuyor bu yüzden surrogate key ekledik
 
         // ait olduğu salon
         [Display(Name="Spor Salonu")]

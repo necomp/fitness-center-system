@@ -1,5 +1,5 @@
 using fitcensys.Models;
-using fitcensys.Models.fitcensys.Models;
+using fitcensys.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using fitcensys.Models.fitcensys.Models;
+using fitcensys.Models;
 
 #nullable disable
 
 namespace fitcensys.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251219202327_edit_data_annot")]
-    partial class edit_data_annot
+    [Migration("20251219225448_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -468,6 +468,12 @@ namespace fitcensys.Migrations
 
                     b.Property<int>("ServiceDefinitionID")
                         .HasColumnType("int");
+
+                    b.Property<int>("TrainerServiceID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrainerServiceID"));
 
                     b.HasKey("TrainerID", "ServiceDefinitionID");
 

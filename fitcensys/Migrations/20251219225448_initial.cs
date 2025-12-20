@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace fitcensys.Migrations
 {
     /// <inheritdoc />
-    public partial class ilk_olusturma : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -292,7 +292,9 @@ namespace fitcensys.Migrations
                 columns: table => new
                 {
                     TrainerID = table.Column<int>(type: "int", nullable: false),
-                    ServiceDefinitionID = table.Column<int>(type: "int", nullable: false)
+                    ServiceDefinitionID = table.Column<int>(type: "int", nullable: false),
+                    TrainerServiceID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
                 },
                 constraints: table =>
                 {
